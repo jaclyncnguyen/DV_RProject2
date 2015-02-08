@@ -1,0 +1,22 @@
+---
+title: "Project 2"
+author: "Jeffrey Zhang and Jaclyn Nguyen"
+date: "Monday, February 16, 2015"
+output: html_document
+---
+
+Project 2 required Jeffrey and I to import a large data set onto Oracle Server and call the data into RStudio to analyze. 
+
+Dataset: Jcn565-311Calls
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
