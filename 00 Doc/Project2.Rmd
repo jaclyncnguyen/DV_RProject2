@@ -10,13 +10,18 @@ Project 2 required Jeffrey and I to import a large data set onto Oracle Server a
 Dataset: Jcn565-311Calls
 
 ```{r}
-summary(cars)
+source("../01 Data/data_frame_orcl.R", echo = TRUE)
 ```
 
 You can also embed plots, for example:
 
-```{r, echo=FALSE}
-plot(cars)
-```
+```{r}
+ggplot(df, aes(x = LONGITUDE, y = LATITUDE)) + geom_point()
+ggplot(data = df) + geom_histogram(aes(x = AGENCY)) + ggtitle("311 Calls to Different Types of Agencies")
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+complaint <- subset(df, AGENCY == "HPD", select = c(COMPLAINT_TYPE))
+head(complaint)
+ggplot (data = complaint, main = "HPD Complaint Breakdown") + geom_histogram(aes(x = COMPLAINT_TYPE)) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ggtitle("HPD Complaint Breakdown")
+
+```
