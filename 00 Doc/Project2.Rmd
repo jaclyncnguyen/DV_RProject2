@@ -16,12 +16,20 @@ source("../01 Data/data_frame_orcl.R", echo = TRUE)
 You can also embed plots, for example:
 
 ```{r}
-ggplot(df, aes(x = LONGITUDE, y = LATITUDE)) + geom_point()
+ggplot(df, aes(x = LATITUDE, y = LONGITUDE, color = BOROUGH)) + geom_point() +  scale_x_discrete(breaks=df$LATITUDE)
 ggplot(data = df) + geom_histogram(aes(x = AGENCY)) + ggtitle("311 Calls to Different Types of Agencies")
 
 
 complaint <- subset(df, AGENCY == "HPD", select = c(COMPLAINT_TYPE))
-head(complaint)
+View(complaint)
 ggplot (data = complaint, main = "HPD Complaint Breakdown") + geom_histogram(aes(x = COMPLAINT_TYPE)) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ggtitle("HPD Complaint Breakdown")
+
+
+
+require(dplyr)
+require(tidyr)
+
+tbl_df(df)
+#df %>% select(ADDRESS_TYPE, BOROUGH) %>% filter(ADDRESS_TPYE == "ADDRESS") %>% tbl_df
 
 ```
