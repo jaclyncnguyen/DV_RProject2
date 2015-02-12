@@ -9,6 +9,12 @@ Project 2 required Jeffrey and I to import a large data set onto Oracle Server a
 
 Dataset: Jcn565-311Calls
 
+__Loading of necessary R packages: RCurl, ggplot2 (R code not shown)__
+
+```{r, include=FALSE}
+library(RCurl)
+library (ggplot2)
+
 ```{r}
 source("../01 Data/data_frame_orcl.R", echo = TRUE)
 ```
@@ -35,11 +41,15 @@ tbl_df(df)
 ```
 
 ```{r}
+df2 <- df %>% select(COMPLAINT_TYPE,CITY,INICIDENT_ZIP) %>% filter(COMPLAINT_TYPE %in% 'HEAT/HOT WATER')
+ggplot(df2, aes(x = factor(CITY), fill = factor(INICIDENT_ZIP))) + geom_bar(width = 1)
 
-
-
-
-
-
+# The x-axis is blurry because there are too many cities, but we know in city BRONX,BROOKLYN and NEW YORK, there are much more complaints than other citis.
+# so we will focus on these three cities to see which area is most severe in each city
+# since there are too many zipcodes, it is better to represent them by each city and use the histgram
+# for BRONX
+df3 <- df2 %>% select(CITY,INICIDENT_ZIP) %>% filter(CITY %in% 'BRONX')
+ggplot(df3) + geom_histogram(colour='darkgreen',aes(x=INICIDENT_ZIP)) + labs(title='HEAT/HOT WATER Compliants Distribution by area in BRONX')
+# we can do same for BROOKLYN and NEW YORK
 
 ```
