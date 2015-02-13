@@ -30,7 +30,8 @@ require(dplyr)
 require(tidyr)
 
 tbl_df(df)
-#df %>% select(ADDRESS_TYPE, BOROUGH) %>% filter(ADDRESS_TPYE == "ADDRESS") %>% tbl_df
+df %>% group_by(BOROUGH, COMPLAINT_TYPE)  %>% summarise(sum = sum(COMPLAINT_TYPE)) %>% tbl_df
+
 
 ```
 
