@@ -11,8 +11,6 @@ Dataset: Jcn565-311Calls
 
 DeScrIBE DATA 
 
-
-
 __Loading of necessary R packages: RCurl, ggplot2 (R code not shown)__
 
 ```{r, include=FALSE}
@@ -41,22 +39,38 @@ require(tidyr)
 
 tbl_df(df)
 #df %>% select(ADDRESS_TYPE, BOROUGH) %>% filter(ADDRESS_TPYE == "ADDRESS") %>% tbl_df
-
+df %>% group_by(BOROUGH, COMPLAINT_TYPE)  %>% summarise(sum = sum(COMPLAINT_TYPE)) %>% tbl_df
 ```
 
 ```{r}
-# Breakdown of complaints by Borough
-df %>% group_by(BOROUGH, COMPLAINT_TYPE)  %>% summarise(sum = sum(COMPLAINT_TYPE)) %>% tbl_df
+# From graph above, we know overall HEAT/HOT WATER problem is most severe, now we want to know in which citys this problem is most significant
+# import df1 in Data Folder, which is a df containging all info about HEAT/HOT WATER problem
+source ('../01 Data/df1.R')
+tbl_df(df1)
+# plot
+source('../02 Data Wrangling/DR1.R',echo = T)
 
-df2 <- df %>% select(COMPLAINT_TYPE,CITY,INICIDENT_ZIP) %>% filter(COMPLAINT_TYPE %in% 'HEAT/HOT WATER')
-ggplot(df2, aes(x = factor(CITY), fill = factor(INICIDENT_ZIP))) + geom_bar(width = 1)+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-# The x-axis is blurry because there are too many cities, but we know in city BRONX,BROOKLYN and NEW YORK, there are much more complaints than other citis.
-# so we will focus on these three cities to see which area is most severe in each city
+# Now we know, in BRONX,BROOKLYN and NEW YORK, there are much more complaints than other citis
+# So we will focus on these three cities to see which areas are most severe in each city
 # since there are too many zipcodes, it is better to represent them by each city and use the histgram
-# for BRONX
-df3 <- df2 %>% select(CITY,INICIDENT_ZIP) %>% filter(CITY %in% 'BRONX')
-ggplot(df3) + geom_histogram(colour='darkgreen',aes(x=INICIDENT_ZIP)) + labs(title='HEAT/HOT WATER Compliants Distribution by area in BRONX')+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
-# we can do same for BROOKLYN and NEW YORK
+
+# For BRONX
+# import df2
+source ('../01 Data/df2.R')
+tbl_df(df2)
+#plot 
+source('../02 Data Wrangling/DR2.R',echo = T)
+
+# For BROOKLYN import df3
+source ('../01 Data/df3.R')
+tbl_df(df3)
+# plot 
+source('../02 Data Wrangling/DR3.R',echo = T)
+
+# For NEW YORK import df4
+source ('../01 Data/df4.R')
+tbl_df(df4)
+# plot 
+source('../02 Data Wrangling/DR4.R',echo = T)
 
 ```

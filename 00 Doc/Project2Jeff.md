@@ -9,6 +9,8 @@ Project 2 required Jeffrey and I to import a large data set onto Oracle Server a
 
 Dataset: Jcn565-311Calls
 
+DeScrIBE DATA 
+
 __Loading of necessary R packages: RCurl, ggplot2 (R code not shown)__
 
 
@@ -73,7 +75,7 @@ You can also embed plots, for example:
 
 
 ```r
-ggplot(df, aes(x = LATITUDE, y = LONGITUDE, color = BOROUGH)) + geom_point() +  scale_x_discrete(breaks=df$LATITUDE)
+ggplot(df, aes(x = LATITUDE, y = LONGITUDE, color = BOROUGH)) + geom_point() +  scale_y_discrete(breaks=df$LATITUDE) + scale_x_discrete(breaks=df$LONGITUDE)
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
@@ -92,88 +94,155 @@ ggplot (data = complaint, main = "HPD Complaint Breakdown") + geom_histogram(aes
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-3.png) 
 
-```r
-require(dplyr)
-```
-
-```
-## Loading required package: dplyr
-## 
-## Attaching package: 'dplyr'
-## 
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
-require(tidyr)
-```
-
-```
-## Loading required package: tidyr
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'tidyr'
-```
-
-```r
-tbl_df(df)
-```
-
-```
-## Source: local data frame [1,804 x 19]
-## 
-##    UNIQUE_KEY CREATED_DATE AGENCY
-## 1    29865170  2/5/15 0:00    HPD
-## 2    29864206  2/5/15 0:00    HPD
-## 3    29865935  2/5/15 0:00    HPD
-## 4    29866366  2/5/15 0:00    HPD
-## 5    29868518  2/5/15 0:00    HPD
-## 6    29868840  2/5/15 0:00    HPD
-## 7    29868810  2/5/15 0:00    HPD
-## 8    29870036  2/5/15 0:00    HPD
-## 9    29869937  2/5/15 0:00    HPD
-## 10   29872123  2/5/15 0:00    HPD
-## ..        ...          ...    ...
-## Variables not shown: AGENCY_NAME (fctr), COMPLAINT_TYPE (fctr), DESCRIPTOR
-##   (fctr), LOCATION_TYPE (fctr), INICIDENT_ZIP (fctr), INCIDENT_ADDRESS
-##   (fctr), STREET_NAME (fctr), ADDRESS_TYPE (fctr), CITY (fctr),
-##   FACILITY_TYPE (fctr), BOROUGH (fctr), PARK_FACILITY_NAME (fctr),
-##   PARK_BOROUGH (fctr), LATITUDE (fctr), LONGITUDE (fctr), LOCATION (fctr)
-```
-
-```r
-#df %>% select(ADDRESS_TYPE, BOROUGH) %>% filter(ADDRESS_TPYE == "ADDRESS") %>% tbl_df
-```
 
 
 ```r
-#from above plot, we know in HPD Dept, HEAT/HOT WATER is the most severe problem in these cities on average. Now we are curious about in which citys they have more compliants and which areas (by zipcode) in those cities have most complaints
- 
-df2 <- df %>% select(COMPLAINT_TYPE,CITY,INICIDENT_ZIP) %>% filter(COMPLAINT_TYPE %in% 'HEAT/HOT WATER')
-ggplot(df2, aes(x = factor(CITY), fill = factor(INICIDENT_ZIP))) + geom_bar(width = 1)
+# From graph above, we know overall HEAT/HOT WATER problem is most severe, now we want to know in which citys this problem is most significant
+# import df1 in Data Folder, which is a df containging all info about HEAT/HOT WATER problem
+source ('../01 Data/df1.R')
+tbl_df(df1)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+```
+## Source: local data frame [722 x 3]
+## 
+##    COMPLAINT_TYPE          CITY INICIDENT_ZIP
+## 1  HEAT/HOT WATER         BRONX         10451
+## 2  HEAT/HOT WATER         BRONX         10472
+## 3  HEAT/HOT WATER      NEW YORK         10040
+## 4  HEAT/HOT WATER      NEW YORK         10010
+## 5  HEAT/HOT WATER      NEW YORK         10024
+## 6  HEAT/HOT WATER         BRONX         10466
+## 7  HEAT/HOT WATER      NEW YORK         10040
+## 8  HEAT/HOT WATER         BRONX         10463
+## 9  HEAT/HOT WATER East Elmhurst         11369
+## 10 HEAT/HOT WATER      BROOKLYN         11211
+## ..            ...           ...           ...
+```
 
 ```r
-# from the graph, we know in city BRONX,BROOKLYN and NEW YORK, there are much more complaints than other citis.
-# so we will focus on these three cities to see which area is most severe in each city
+# plot
+source('../02 Data Wrangling/DR1.R',echo = T)
+```
+
+```
+## 
+## > df1 %>% ggplot(aes(x = factor(CITY), fill = factor(INICIDENT_ZIP))) + 
+## +     geom_bar(width = 1) + theme(axis.text.x = element_text(angle = 90, 
+## +   .... [TRUNCATED]
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
+```r
+# Now we know, in BRONX,BROOKLYN and NEW YORK, there are much more complaints than other citis
+# So we will focus on these three cities to see which areas are most severe in each city
 # since there are too many zipcodes, it is better to represent them by each city and use the histgram
-# for BRONX
-df3 <- df2 %>% select(CITY,INICIDENT_ZIP) %>% filter(CITY %in% 'BRONX')
-ggplot(df3) + geom_histogram(colour='darkgreen',aes(x=INICIDENT_ZIP)) + labs(title='HEAT/HOT WATER Compliants Distribution by area in BRONX')
+
+# For BRONX
+# import df2
+source ('../01 Data/df2.R')
+tbl_df(df2)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-2.png) 
+```
+## Source: local data frame [246 x 2]
+## 
+##     CITY INICIDENT_ZIP
+## 1  BRONX         10451
+## 2  BRONX         10472
+## 3  BRONX         10466
+## 4  BRONX         10463
+## 5  BRONX         10472
+## 6  BRONX         10451
+## 7  BRONX         10468
+## 8  BRONX         10458
+## 9  BRONX         10453
+## 10 BRONX         10452
+## ..   ...           ...
+```
 
 ```r
-# we can do same for BROOKLYN and NEW YORK
+#plot 
+source('../02 Data Wrangling/DR2.R',echo = T)
 ```
+
+```
+## 
+## > ggplot(df2) + geom_histogram(colour = "darkgreen", 
+## +     aes(x = INICIDENT_ZIP)) + labs(title = "HEAT/HOT WATER Compliants Distribution by area in  ..." ... [TRUNCATED]
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-2.png) 
+
+```r
+# For BROOKLYN import df3
+source ('../01 Data/df3.R')
+tbl_df(df3)
+```
+
+```
+## Source: local data frame [209 x 2]
+## 
+##        CITY INICIDENT_ZIP
+## 1  BROOKLYN         11211
+## 2  BROOKLYN         11209
+## 3  BROOKLYN         11213
+## 4  BROOKLYN         11209
+## 5  BROOKLYN         11214
+## 6  BROOKLYN         11214
+## 7  BROOKLYN         11221
+## 8  BROOKLYN         11226
+## 9  BROOKLYN         11218
+## 10 BROOKLYN         11225
+## ..      ...           ...
+```
+
+```r
+# plot 
+source('../02 Data Wrangling/DR3.R',echo = T)
+```
+
+```
+## 
+## > ggplot(df3) + geom_histogram(colour = "darkgreen", 
+## +     aes(x = INICIDENT_ZIP)) + labs(title = "HEAT/HOT WATER Compliants Distribution by areas in ..." ... [TRUNCATED]
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-3.png) 
+
+```r
+# For NEW YORK import df4
+source ('../01 Data/df4.R')
+tbl_df(df4)
+```
+
+```
+## Source: local data frame [165 x 2]
+## 
+##        CITY INICIDENT_ZIP
+## 1  NEW YORK         10040
+## 2  NEW YORK         10010
+## 3  NEW YORK         10024
+## 4  NEW YORK         10040
+## 5  NEW YORK         10034
+## 6  NEW YORK         10010
+## 7  NEW YORK         10024
+## 8  NEW YORK         10033
+## 9  NEW YORK         10012
+## 10 NEW YORK         10034
+## ..      ...           ...
+```
+
+```r
+# plot 
+source('../02 Data Wrangling/DR4.R',echo = T)
+```
+
+```
+## 
+## > ggplot(df4) + geom_histogram(colour = "darkgreen", 
+## +     aes(x = INICIDENT_ZIP)) + labs(title = "HEAT/HOT WATER Compliants Distribution by areas in ..." ... [TRUNCATED]
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-4.png) 
