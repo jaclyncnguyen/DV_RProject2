@@ -5,42 +5,60 @@ date: "Monday, February 16, 2015"
 output: html_document
 ---
 
-Project 2 required Jeffrey and I to import a large data set onto Oracle Server and call the data into RStudio to analyze. 
+Project 2 required Jeffrey and I to import a large dataset into Oracle Server and call the data into RStudio for analysis. Below will describe the dataset and the following analysis. 
 
-Dataset: Jcn565-311Calls
+Dataset: Jcn565_311Calls
 
-DeScrIBE DATA 
+Oracle SQL Developer: C##CS329E_JCN565
 
-__Loading of necessary R packages: RCurl, ggplot2 (R code not shown)__
+Rows: 1804 observations
+
+JCN565_311Calls is a collection of 311 Calls in New York City. 311 Call systems traditionally have been used to report incidents where the immediate presence of a police officer is not required, examples such as quality-of-life problems. The dataset will contain the dates, location, office of contact, complaint type, etc.of the 311 call.
+
+
+![Figure 1. Table Variables](figure/variablenames.png)
+__Figure 1. Table Variables__
+
+Figure 1 displays the table variables used for this project.
+
+
+
+__1. Loading of R packages: RCurl, ggplot2, dplyr, tidyr (R code not shown)__
 
 ```{r, include=FALSE}
 library(RCurl)
 library (ggplot2)
+require(dplyr)
+require(tidyr)
+
+```
+
+__2. Call for JCN565_311Calls from the SQL Server using a data frame query__
 
 ```{r}
 source("../01 Data/data_frame_orcl.R", echo = TRUE)
 ```
+![Figure 2. Sample](figure/sample.png)
 
-You can also embed plots, for example:
+Figure 2. Sample of dataset JCN565_311Calls
 
+Figure 2 showcases a sample set of the dataset that we used for analysis. Please note the missing variables. 
+
+__3. Analysis of JCN565_311Calls__
 ```{r}
-ggplot(df, aes(x = LATITUDE, y = LONGITUDE, color = BOROUGH)) + geom_point() +  scale_y_discrete(breaks=df$LATITUDE) + scale_x_discrete(breaks=df$LONGITUDE)
-ggplot(data = df) + geom_histogram(aes(x = AGENCY)) + ggtitle("311 Calls to Different Types of Agencies")
+source ('../03 Visualization/plot NYC.R', echo = TRUE)
+source('../03 Visualization/plotagency.R', echo = TRUE)
 
 
 complaint <- subset(df, AGENCY == "HPD", select = c(COMPLAINT_TYPE))
-View(complaint)
 ggplot (data = complaint, main = "HPD Complaint Breakdown") + geom_histogram(aes(x = COMPLAINT_TYPE)) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ggtitle("HPD Complaint Breakdown")
 
 ```
-``` {r, include = FALSE}
-require(dplyr)
-require(tidyr)
+``` {r}
+source('../02 Data Wrangling/DR5.R',echo = TRUE)
 
-tbl_df(df)
-#df %>% select(ADDRESS_TYPE, BOROUGH) %>% filter(ADDRESS_TPYE == "ADDRESS") %>% tbl_df
-df %>% group_by(BOROUGH, COMPLAINT_TYPE)  %>% summarise(sum = sum(COMPLAINT_TYPE)) %>% tbl_df
 ```
+
 
 ```{r}
 # From graph above, we know overall HEAT/HOT WATER problem is most severe, now we want to know in which citys this problem is most significant
