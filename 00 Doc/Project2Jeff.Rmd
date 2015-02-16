@@ -40,9 +40,9 @@ source("../01 Data/data_frame_orcl.R", echo = TRUE)
 ```
 ![Figure 2. Sample](figure/sample.png)
 
-Figure 2. Sample of dataset JCN565_311Calls
+__Figure 2. Sample of dataset JCN565_311Calls__
 
-Figure 2 showcases a sample set of the dataset that we used for analysis. Please note the missing variables. Below shows a simple breakdown of the complaint types grouped by the NYC Boroughs. This gives us a better idea of request/complaints by location.
+Figure 2 showcases a sample set of the dataset that we used for analysis. Please note the missing variables to the right of the figure. Below shows a simple breakdown of the complaint types grouped by the NYC Boroughs. This gives us a better idea of request/complaints by location.
 
 ``` {r}
 source('../02 Data Wrangling/DR5.R',echo = TRUE)
@@ -50,11 +50,11 @@ source('../02 Data Wrangling/DR5.R',echo = TRUE)
 ```
 
 __3. Analysis of JCN565_311Calls__
-```{r}
+```{r, warning = FALSE}
 source ('../03 Visualization/plot NYC.R', echo = TRUE)
 ```
 
-Coorindate points (Longitude and Longitude) from callers were documented and was used to help showcase the boroughs in New York City. This visual above was created for that purpose.
+Coorindate points (Longitude and Longitude) from callers were documented and was used to help visualize the boroughs within New York City. The visual above was created for that purpose.
 
 
 ```{r}
@@ -67,42 +67,43 @@ Graph above breaks down which agency receives the most 311 calls.
 source('../03 Visualization/complaint.R', echo = TRUE)
 ```
 
-You are able to see that Department of Housing Preservation and Development (HPD) received the most complaints. From there, we analyzed to see what complaint types were most profound within HPD.
+You are able to see that Department of Housing Preservation and Development (HPD) receives the most complaints. From there, we analyzed to see what complaint types were most profound within HPD. We know overall HEAT/HOT WATER problem is most severe and would want to know in which borough is affected the most. Data frame #1 is imported, which is a dataset that contains information (zip code, borough, location, etc.) about the HEAT/HOT WATER problem. 
 
-
-
-From graph above, we know overall HEAT/HOT WATER problem is most severe, now we would want to know in which borough is affect the most. Dataset df1 is imported, which is a date frame that contains information about HEAT/HOT WATER problem. 
-
+Overall HEAT/HOT WATER breakdown:
+(data imported from data frame #1)
 ```{r}
 source ('../01 Data/df1.R')
 tbl_df(df1)
 source('../02 Data Wrangling/DR1.R',echo = T)
 ```
 
-Now we know BRONX, BROOKLYN, and NEW YORK has much more complaints than other boroughs. We will now focus on these three boroughs to see which area is most severe in each ityc since there are too many zipcodes, it is better to represent them by each city and use the histgram
+Now we know BRONX, BROOKLYN, and NEW YORK has much more complaints than other boroughs. We will now focus on these three boroughs to see which specific area in each borough is most severe based on zipcode, it is better to represent each city through a histogram. 
 
 For BRONX:
+(data imported from data frame #2)
 ```{r}
-# import df2
 source ('../01 Data/df2.R')
 tbl_df(df2)
-#plot 
+View(df2) 
 source('../02 Data Wrangling/DR2.R',echo = T)
 ```
 
 For BROOKLYN:
+(data imported from data frame #3)
 ```{r}
 source ('../01 Data/df3.R')
 tbl_df(df3)
-# plot 
 source('../02 Data Wrangling/DR3.R',echo = T)
 ```
 
 For NEW YORK:
+(data imported from data frame #4)
 ```{r}
 source ('../01 Data/df4.R')
 tbl_df(df4)
-# plot 
+
 source('../02 Data Wrangling/DR4.R',echo = T)
 
 ```
+
+By having this data, it can be used to help the city determine specific locations within NYC to be addressed first due to the amount of incoming 311 Calls. It can also be used to determine where to allocate city money in order to better the city and fully understand what issues occur in different boroughs.

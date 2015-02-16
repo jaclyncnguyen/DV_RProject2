@@ -1,1 +1,1 @@
-ggplot(df, aes(x = LATITUDE, y = LONGITUDE, color = BOROUGH)) + geom_point() +  scale_y_discrete(breaks=df$LATITUDE) + scale_x_discrete(breaks=df$LONGITUDE)
+ggplot(df, aes(x = LATITUDE, y = LONGITUDE, color = BOROUGH, null.rm=TRUE)) + geom_point() +  scale_y_discrete(labels = NULL) + scale_x_discrete(labels= NULL)
